@@ -1,5 +1,8 @@
 package com.jccsisc.fundamentoscorutinas
 
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlin.concurrent.thread
 import kotlin.random.Random
 
@@ -19,10 +22,19 @@ fun main() {
 fun coroutinesVsThreads() {
     newTopic("Corrutinas vs Threads")
 
-    (1..1_000_000).forEach {
+    runBlocking {
+        (1..1_000_000).forEach {
+            launch {
+                delay(someTime())
+                println("*")
+            }
+        }
+    }
+
+    /*(1..1_000_000).forEach {
         Thread.sleep(somTime())
         println("*")
-    }
+    }*/
 }
 
 private const val SEPARATOR = "===================="
@@ -41,7 +53,7 @@ fun threads() {
 fun multiThread(x: Int, y: Int): Int {
     var result = 0
     thread {
-        Thread.sleep(somTime())
+        Thread.sleep(someTime())
         result = x * y
     }
 //    Thread.sleep(3_000)
@@ -51,13 +63,13 @@ fun multiThread(x: Int, y: Int): Int {
 fun multiThreadLambda(x: Int, y: Int, callback: (result: Int) -> Unit) {
     var result = 0
     thread {
-        Thread.sleep(somTime())
+        Thread.sleep(someTime())
         result = x * y
         callback(result)
     }
 }
 
-fun somTime(): Long = Random.nextLong(500, 3_000)
+fun someTime(): Long = Random.nextLong(500, 3_000)
 
 fun lambda() {
     newTopic("Lambda")
