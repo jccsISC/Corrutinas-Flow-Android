@@ -11,11 +11,27 @@ import kotlin.random.Random
  * All rights reserved 2022.
  ***/
 fun main() {
-    lambda()
-    threads()
+//    lambda()
+//    threads()
+    coroutinesVsThreads()
+}
+
+fun coroutinesVsThreads() {
+    newTopic("Corrutinas vs Threads")
+
+    (1..1_000_000).forEach {
+        Thread.sleep(somTime())
+        println("*")
+    }
+}
+
+private const val SEPARATOR = "===================="
+fun newTopic(topic: String) {
+    println("\n$SEPARATOR $topic $SEPARATOR\n")
 }
 
 fun threads() {
+    newTopic("Threads")
     println("Thread ${multiThread(2, 6)}")
     multiThreadLambda(2,6) {
         println("Thread + Lambda $it")
@@ -44,8 +60,8 @@ fun multiThreadLambda(x: Int, y: Int, callback: (result: Int) -> Unit) {
 fun somTime(): Long = Random.nextLong(500, 3_000)
 
 fun lambda() {
+    newTopic("Lambda")
     println(multi(2,3))
-
     multiLambda(2, 5) { result ->
         println(result)
     }
