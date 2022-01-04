@@ -16,7 +16,10 @@ fun main() {
 }
 
 fun threads() {
-    println(multiThread(2, 6))
+    println("Thread ${multiThread(2, 6)}")
+    multiThreadLambda(2,6) {
+        println("Thread + Lambda $it")
+    }
 }
 
 fun multiThread(x: Int, y: Int): Int {
@@ -24,9 +27,18 @@ fun multiThread(x: Int, y: Int): Int {
     thread {
         Thread.sleep(somTime())
         result = x * y
-        println(result)
     }
+//    Thread.sleep(3_000)
     return  result
+}
+
+fun multiThreadLambda(x: Int, y: Int, callback: (result: Int) -> Unit) {
+    var result = 0
+    thread {
+        Thread.sleep(somTime())
+        result = x * y
+        callback(result)
+    }
 }
 
 fun somTime(): Long = Random.nextLong(500, 3_000)
