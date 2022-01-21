@@ -15,9 +15,35 @@ fun main() {
     newTopic("Constructores de corrutinas")
 //    cRunBlocking()
 //    cLaunch()
-    cAsnyc()
+//    cAsnyc()
+    job()
 
     readLine() //espera a que ingreses por teclado cualquier cosa
+}
+
+fun job() {
+    runBlocking {
+        newTopic("Job")
+        val job = launch {
+            startMsg()
+            delay(4_000)
+            println("job...")
+            endMsg()
+        }
+        println("Job: $job")
+
+//        delay(5_000)
+        println("isActive: ${job.isActive}")
+        println("isCancelled: ${job.isCancelled}")
+        println("isCompleted: ${job.isCompleted}")
+
+        delay(someTime())
+        println("Tarea cancelada o interrumpida")
+        job.cancel()
+        println("isActive: ${job.isActive}")
+        println("isCancelled: ${job.isCancelled}")
+        println("isCompleted: ${job.isCompleted}")
+    }
 }
 
 fun cAsnyc() {
