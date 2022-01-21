@@ -1,6 +1,10 @@
 package com.jccsisc.fundamentoscorutinas
 
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlin.random.Random
 
 /****
  * Project: FundamentosCorutinas
@@ -13,8 +17,31 @@ fun main() {
 //    dispatchers()
 //    nested()
 //    changeWithContext()
-
+    basicFlows()
 }
+
+fun basicFlows() {
+    newTopic("Flows basicos")
+    runBlocking {
+        launch { getDatabyFlow().collect { println(it) } }
+
+        launch {
+            (1..50).forEach {
+                delay(someTime() / 10)
+                println("Tarea 2...")
+            }
+        }
+    }
+}
+
+fun getDatabyFlow(): Flow<Float> = flow {
+    (1..5).forEach {
+        println("Procesando algo...")
+        delay(someTime())
+        emit(20 + it + Random.nextFloat())
+    }
+}
+
 
 fun changeWithContext() {
     runBlocking {
@@ -51,7 +78,7 @@ fun nested() {
                 println("Otra tarea")
                 endMsg()
             }
-           val subJob = launch(Dispatchers.IO) {
+            val subJob = launch(Dispatchers.IO) {
                 startMsg()
 
                 launch(newSingleThreadContext("Cursos Android ANT")) {
@@ -65,14 +92,14 @@ fun nested() {
                 endMsg()
             }
 
-            delay(someTime()/4)
+            delay(someTime() / 4)
             subJob.cancel()
             println("SubJob cancelado...")
 
             var sum = 0
             (1..100).forEach {
                 sum += it
-                delay(someTime()/100)
+                delay(someTime() / 100)
             }
             println("Sum = $sum")
             endMsg()
@@ -126,7 +153,7 @@ fun dispatchers() {
             endMsg()
         }
 
-        newSingleThreadContext("Cursos AndroidANT").use {myContext->
+        newSingleThreadContext("Cursos AndroidANT").use { myContext ->
             launch(myContext) {
                 startMsg()
                 println("Corrutina personalizada con un Dispatcher2")
