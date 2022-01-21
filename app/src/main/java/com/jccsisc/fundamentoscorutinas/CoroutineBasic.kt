@@ -1,9 +1,6 @@
 package com.jccsisc.fundamentoscorutinas
 
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 
 /****
  * Project: FundamentosCorutinas
@@ -17,9 +14,24 @@ fun main() {
 //    suspendFun()
     newTopic("Constructores de corrutinas")
 //    cRunBlocking()
-    cLaunch()
+//    cLaunch()
+    cAsnyc()
 
     readLine() //espera a que ingreses por teclado cualquier cosa
+}
+
+fun cAsnyc() {
+    runBlocking {
+        newTopic("Async")
+        val result = async {
+            startMsg()
+            delay(someTime())
+            println("acync...")
+            endMsg()
+            1
+        }
+        println("Result: ${result.await()}")
+    }
 }
 
 fun cLaunch() {
