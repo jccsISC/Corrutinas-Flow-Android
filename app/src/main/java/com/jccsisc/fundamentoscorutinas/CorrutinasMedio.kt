@@ -1,9 +1,6 @@
 package com.jccsisc.fundamentoscorutinas
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.newSingleThreadContext
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 
 /****
  * Project: FundamentosCorutinas
@@ -13,7 +10,48 @@ import kotlinx.coroutines.runBlocking
  * All rights reserved 2022.
  ***/
 fun main() {
-    dispatchers()
+//    dispatchers()
+    nested()
+}
+
+fun nested() {
+    runBlocking {
+        newTopic("Anidar")
+        val job = launch {
+            startMsg()
+            launch {
+                startMsg()
+                delay(someTime())
+                println("Otra tarea")
+                endMsg()
+            }
+            launch(Dispatchers.IO) {
+                startMsg()
+
+                launch(newSingleThreadContext("Cursos Android ANT")) {
+                    startMsg()
+                    println("tarea cursos Android ANT")
+                    endMsg()
+                }
+
+                delay(someTime())
+                println("tarea en el servidor")
+                endMsg()
+            }
+
+            var sum = 0
+            (1..100).forEach {
+                sum += it
+                delay(someTime()/100)
+            }
+            println("Sum = $sum")
+            endMsg()
+        }
+
+        delay(someTime()/2)
+        job.cancel()
+        println("Job cancelado...")
+    }
 }
 
 fun dispatchers() {
