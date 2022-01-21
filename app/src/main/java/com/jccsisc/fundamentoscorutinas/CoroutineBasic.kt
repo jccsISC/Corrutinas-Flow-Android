@@ -16,9 +16,32 @@ fun main() {
 //    cRunBlocking()
 //    cLaunch()
 //    cAsnyc()
-    job()
+//    job()
+    deferred()
 
     readLine() //espera a que ingreses por teclado cualquier cosa
+}
+
+fun deferred() {
+    runBlocking {
+        newTopic("Deferred")
+        val deferred = async {
+            startMsg()
+            delay(someTime())
+            println("deferred...")
+            endMsg()
+            multi(5, 2)
+        }
+
+        println("Deferred: $deferred")
+        println("Valor del deferred.await: ${deferred.await()}")
+
+        val result = async {
+            multi(3,3)
+        }.await()
+
+        println("Result: $result")
+    }
 }
 
 fun job() {
