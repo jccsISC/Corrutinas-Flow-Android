@@ -25,7 +25,7 @@ fun nested() {
                 println("Otra tarea")
                 endMsg()
             }
-            launch(Dispatchers.IO) {
+           val subJob = launch(Dispatchers.IO) {
                 startMsg()
 
                 launch(newSingleThreadContext("Cursos Android ANT")) {
@@ -39,6 +39,10 @@ fun nested() {
                 endMsg()
             }
 
+            delay(someTime()/4)
+            subJob.cancel()
+            println("SubJob cancelado...")
+
             var sum = 0
             (1..100).forEach {
                 sum += it
@@ -48,9 +52,9 @@ fun nested() {
             endMsg()
         }
 
-        delay(someTime()/2)
+        /*delay(someTime()/2)
         job.cancel()
-        println("Job cancelado...")
+        println("Job cancelado...")*/
     }
 }
 
