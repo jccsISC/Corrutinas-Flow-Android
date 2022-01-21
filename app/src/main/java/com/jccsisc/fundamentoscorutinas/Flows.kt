@@ -2,8 +2,10 @@ package com.jccsisc.fundamentoscorutinas
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.*
 
 /****
  * Project: FundamentosCorutinas
@@ -14,8 +16,27 @@ import kotlinx.coroutines.runBlocking
  ***/
 fun main() {
 //    coldFlow()
-    cancelFlow()
+//    cancelFlow()
+    operadoresFlow()
 }
+
+fun operadoresFlow() {
+    runBlocking {
+        newTopic("Operadores intermediarios")
+        newTopic("Map")
+        getDatabyFlow()
+                .map {
+                    setFormat(it)
+                    setFormat(converCelsToFahr(it), "F")
+                }
+                .collect { println(it) }
+    }
+}
+
+fun converCelsToFahr(cels: Float) = ((cels * 9) / 5) + 32
+
+//                                                  Redondeamos la cantidad a 1 solo decimal
+fun setFormat(temp: Float, degree: String = "C") = String.format(Locale.getDefault(), "%.1f $degree", temp)
 
 fun cancelFlow() {
     runBlocking {
