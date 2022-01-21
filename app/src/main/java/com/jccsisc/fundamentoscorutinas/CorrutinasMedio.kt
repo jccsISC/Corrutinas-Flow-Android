@@ -11,7 +11,32 @@ import kotlinx.coroutines.*
  ***/
 fun main() {
 //    dispatchers()
-    nested()
+//    nested()
+    changeWithContext()
+}
+
+fun changeWithContext() {
+    runBlocking {
+        newTopic("withContext")
+        startMsg()
+
+        /**cambiar el contexto del padre*/
+        withContext(newSingleThreadContext("Cursos Android ANT")) {
+            startMsg()
+            delay(someTime())
+            println("CursosAndroidANT")
+            endMsg()
+        }
+
+        withContext(Dispatchers.IO) {
+            startMsg()
+            delay(someTime())
+            println("Peticion al servidor")
+            endMsg()
+        }
+
+        endMsg()
+    }
 }
 
 fun nested() {
