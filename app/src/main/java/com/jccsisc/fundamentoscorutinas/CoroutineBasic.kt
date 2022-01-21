@@ -3,6 +3,7 @@ package com.jccsisc.fundamentoscorutinas
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /****
  * Project: FundamentosCorutinas
@@ -12,9 +13,20 @@ import kotlinx.coroutines.launch
  * All rights reserved 2022.
  ***/
 fun main() {
-    globalScope()
+//    globalScope()
 
+
+    runBlocking {
+        suspendFun()
+    }
     readLine() //espera a que ingreses por teclado cualquier cosa
+}
+
+suspend fun suspendFun() {
+    newTopic("Suspend")
+    Thread.sleep(someTime())
+//    GlobalScope.launch { delay(someTime()) }
+    delay(someTime())
 }
 
 fun globalScope() {
