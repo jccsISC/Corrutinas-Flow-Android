@@ -23,7 +23,7 @@ fun coroutinesVsThreads() {
     newTopic("Corrutinas vs Threads")
 
     runBlocking {
-        (1..1_000_000).forEach {
+        (1..1_000_000).forEach { _ ->
             launch {
                 delay(someTime())
                 println("*")
@@ -31,8 +31,8 @@ fun coroutinesVsThreads() {
         }
     }
 
-    /*(1..1_000_000).forEach {
-        Thread.sleep(somTime())
+   /* (1..1_000_000).forEach {
+        Thread.sleep(someTime())
         println("*")
     }*/
 }
@@ -83,6 +83,4 @@ fun multiLambda(x: Int, y: Int, callback: (result: Int) -> Unit) {
     callback(x * y)
 }
 
-fun multi(x: Int, y: Int): Int {
-    return x * y
-}
+fun multi(x: Int, y: Int) = x * y
