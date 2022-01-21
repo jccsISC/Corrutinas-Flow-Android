@@ -1,6 +1,9 @@
 package com.jccsisc.fundamentoscorutinas
 
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.channels.produce
 
 /****
  * Project: FundamentosCorutinas
@@ -17,9 +20,23 @@ fun main() {
 //    cLaunch()
 //    cAsnyc()
 //    job()
-    deferred()
+//    deferred()
+    cProduce()
 
     readLine() //espera a que ingreses por teclado cualquier cosa
+}
+
+fun cProduce() {
+    runBlocking {
+        newTopic("Produce")
+        val names = produceNames()
+        names.consumeEach { println(it) }
+    }
+}
+
+/**Funcion de extension*/
+fun CoroutineScope.produceNames(): ReceiveChannel<String> = produce {
+    (1..5).forEach { send("name $it") }
 }
 
 fun deferred() {
