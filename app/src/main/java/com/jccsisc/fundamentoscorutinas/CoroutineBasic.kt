@@ -14,19 +14,40 @@ import kotlinx.coroutines.runBlocking
  ***/
 fun main() {
 //    globalScope()
+//    suspendFun()
+    newTopic("Constructores de corrutinas")
+//    cRunBlocking()
+    cLaunch()
 
-
-    runBlocking {
-        suspendFun()
-    }
     readLine() //espera a que ingreses por teclado cualquier cosa
 }
 
-suspend fun suspendFun() {
+fun cLaunch() {
+    runBlocking {
+        newTopic("Launch")
+        launch {
+            startMsg()
+            delay(someTime())
+            println("launch...")
+            endMsg()
+        }
+    }
+}
+
+fun cRunBlocking() {
+    newTopic("RunBlocking")
+    runBlocking {
+        startMsg()
+        delay(someTime())
+        println("runBlocking")
+        endMsg()
+    }
+}
+
+fun suspendFun() {
     newTopic("Suspend")
     Thread.sleep(someTime())
-//    GlobalScope.launch { delay(someTime()) }
-    delay(someTime())
+    GlobalScope.launch { delay(someTime()) }
 }
 
 fun globalScope() {
