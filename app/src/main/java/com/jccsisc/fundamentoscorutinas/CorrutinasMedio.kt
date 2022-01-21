@@ -2,6 +2,7 @@ package com.jccsisc.fundamentoscorutinas
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
 
 /****
@@ -35,6 +36,34 @@ fun dispatchers() {
             startMsg()
             println("Unconfined")
             endMsg()
+        }
+
+        /**Solamente se recomienda usar en el cambio de la interfaz en Android*/
+        /*launch(Dispatchers.Main) {
+            startMsg()
+            println("Unconfined")
+            endMsg()
+        }*/
+
+        /**Para procesos largos o intensos, imagenes, calculos intensos*/
+        launch(Dispatchers.Default) {
+            startMsg()
+            println("Default")
+            endMsg()
+        }
+
+        launch(newSingleThreadContext("Cursos Android ANT")) {
+            startMsg()
+            println("Corrutina personalizada con un Dispatcher")
+            endMsg()
+        }
+
+        newSingleThreadContext("Cursos AndroidANT").use {myContext->
+            launch(myContext) {
+                startMsg()
+                println("Corrutina personalizada con un Dispatcher2")
+                endMsg()
+            }
         }
     }
 }
