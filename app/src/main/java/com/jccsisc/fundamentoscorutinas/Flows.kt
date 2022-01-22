@@ -1,5 +1,6 @@
 package com.jccsisc.fundamentoscorutinas
 
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -25,7 +26,34 @@ fun main() {
 //    conflateFlow()
 //    multiFlow()
 //    flatFlows()
-    flowExceptions()
+//    flowExceptions()
+    completionsFlow()
+
+}
+
+fun completionsFlow() {
+    runBlocking {
+        newTopic("Fin de un Flujo (onCompletion)")
+        getCitiesFlow()
+                .onCompletion { println("Quitar el progressBar...") }
+                //.collect { println(it) }
+
+        println()
+
+        getMatchResultFlow()
+                .onCompletion { println("Mostrar las estadisticas...") }
+                .catch { emit("Error: $this") }
+                //.collect { println(it) }
+
+        newTopic("Cancelar el flow")
+        getDatabyFlowStatic()
+                .onCompletion { println("Ya no le interesa al usuario...") }
+                .cancellable()
+                .collect {
+                    if (it > 22.5f) cancel()
+                    println(it)
+                }
+    }
 }
 
 fun flowExceptions() {
