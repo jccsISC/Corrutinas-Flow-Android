@@ -4,6 +4,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.lang.Exception
 import java.util.*
 import kotlin.random.Random
 import kotlin.system.measureTimeMillis
@@ -23,7 +24,24 @@ fun main() {
 //    bufferFlow()
 //    conflateFlow()
 //    multiFlow()
-    flatFlows()
+//    flatFlows()
+    flowExceptions()
+}
+
+fun flowExceptions() {
+    runBlocking {
+        newTopic("Control de errores")
+        newTopic("Try/Catch")
+        try {
+            getMatchResultFlow()
+                    .collect {
+                        println(it)
+                        if (it.contains("2")) throw Exception("Habían acordado 1-1 :v")
+                    }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }
 
 fun flatFlows() {
@@ -32,15 +50,15 @@ fun flatFlows() {
 
         newTopic("FlatMapConcat")
         getCitiesFlow()
-                .flatMapConcat { city-> //Flow<Flow<TYPE>>
+                .flatMapConcat { city -> //Flow<Flow<TYPE>>
                     getDataFlatFlow(city)
                 }
                 .map { setFormat(it) }
-                //.collect { println(it) }
+        //.collect { println(it) }
 
         newTopic("FlatMapMerge")
         getCitiesFlow()
-                .flatMapMerge { city-> //Flow<Flow<TYPE>>
+                .flatMapMerge { city -> //Flow<Flow<TYPE>>
                     getDataFlatFlow(city)
                 }
                 .map { setFormat(it) }
@@ -61,7 +79,7 @@ fun getDataFlatFlow(city: String) = flow {
 
 fun getCitiesFlow() = flow {
     listOf("Santander", "CDMX", "Lima")
-            .forEach { city->
+            .forEach { city ->
                 println("Consultando ciudad...")
                 delay(1000)
                 emit(city)
@@ -74,7 +92,7 @@ fun multiFlow() {
         //mezclar 2 flujos zip
         getDatabyFlowStatic()
                 .map { setFormat(it) }
-                .combine(getMatchResultFlow()) { degrees, result->
+                .combine(getMatchResultFlow()) { degrees, result ->
 //                .zip(getMatchResultFlow()) { degrees, result->
                     "$result with $degrees"
                 }
@@ -89,7 +107,7 @@ fun conflateFlow() {
             getMatchResultFlow()
                     .conflate()
                     .collectLatest {
-                    //.collect {
+                        //.collect {
                         delay(100)
                         println(it)
                     }
@@ -132,23 +150,23 @@ fun terminalFlowOperators() {
         newTopic("Operadores Flow Terminales")
         newTopic("List Operator")
         val list = getDatabyFlow()
-                //.toList()
+        //.toList()
         println("List: $list")
 
         newTopic("Single")
         val single = getDatabyFlow()
-                //.take(1)
-                //.single()
+        //.take(1)
+        //.single()
         println("Single: $single")
 
         newTopic("Fisrt")
         val first = getDatabyFlow()
-                //.first()
+        //.first()
         println("First: $first")
 
         newTopic("Last")
         val last = getDatabyFlow()
-                //.last()
+        //.last()
         println("Last: $last")
 
         newTopic("Reduce")
@@ -165,7 +183,7 @@ fun terminalFlowOperators() {
         newTopic("Fold")
         val lastSaving = saving
         val totalSaving = getDatabyFlow()
-                .fold(lastSaving, { acc, value->
+                .fold(lastSaving, { acc, value ->
                     println("Accumulator: $acc")
                     println("Value: $value")
                     println("Current saving: ${acc + value}")
@@ -185,17 +203,17 @@ fun operadoresFlow() {
                     setFormat(it)
                     setFormat(convertCelsToFahr(it), "F")
                 }
-                //.collect { println(it) }
+        //.collect { println(it) }
 
         newTopic("Filter")
         getDatabyFlow()
                 .filter {
-                     it < 23
+                    it < 23
                 }
                 .map {
                     setFormat(it)
                 }
-                //.collect { println(it) }
+        //.collect { println(it) }
 
         newTopic("Transform")
         getDatabyFlow()
@@ -203,13 +221,13 @@ fun operadoresFlow() {
                     emit(setFormat(it))
                     emit(setFormat(convertCelsToFahr(it), "F"))
                 }
-                //.collect { println(it) }
+        //.collect { println(it) }
 
         newTopic("Take")
         getDatabyFlow()
                 .take(3)
                 .map { setFormat(it) }
-                //.collect { println(it) }
+        //.collect { println(it) }
 
 
     }
