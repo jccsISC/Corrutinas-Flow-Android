@@ -22,7 +22,50 @@ fun main() {
 //    terminalFlowOperators()
 //    bufferFlow()
 //    conflateFlow()
-    multiFlow()
+//    multiFlow()
+    flatFlows()
+}
+
+fun flatFlows() {
+    runBlocking {
+        newTopic("Flujos de aplanamiento")
+
+        newTopic("FlatMapConcat")
+        getCitiesFlow()
+                .flatMapConcat { city-> //Flow<Flow<TYPE>>
+                    getDataFlatFlow(city)
+                }
+                .map { setFormat(it) }
+                //.collect { println(it) }
+
+        newTopic("FlatMapMerge")
+        getCitiesFlow()
+                .flatMapMerge { city-> //Flow<Flow<TYPE>>
+                    getDataFlatFlow(city)
+                }
+                .map { setFormat(it) }
+                .collect { println(it) }
+    }
+}
+
+fun getDataFlatFlow(city: String) = flow {
+    (1..3).forEach {
+        println("Temperatura de ayer en $city")
+        emit(Random.nextInt(10, 30).toFloat())
+
+        println("Temperatura actual en $city")
+        delay(100)
+        emit(20 + it + Random.nextFloat())
+    }
+}
+
+fun getCitiesFlow() = flow {
+    listOf("Santander", "CDMX", "Lima")
+            .forEach { city->
+                println("Consultando ciudad...")
+                delay(1000)
+                emit(city)
+            }
 }
 
 fun multiFlow() {
