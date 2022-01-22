@@ -21,7 +21,22 @@ fun main() {
 //    operadoresFlow()
 //    terminalFlowOperators()
 //    bufferFlow()
-    conflateFlow()
+//    conflateFlow()
+    multiFlow()
+}
+
+fun multiFlow() {
+    runBlocking {
+        newTopic("Zip y Combine")
+        //mezclar 2 flujos zip
+        getDatabyFlowStatic()
+                .map { setFormat(it) }
+                .combine(getMatchResultFlow()) { degrees, result->
+//                .zip(getMatchResultFlow()) { degrees, result->
+                    "$result with $degrees"
+                }
+                .collectLatest { println(it) }
+    }
 }
 
 fun conflateFlow() {
