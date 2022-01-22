@@ -55,6 +55,17 @@ fun terminalFlowOperators() {
                 }
         println("Saving: $saving")
 
+        newTopic("Fold")
+        val lastSaving = saving
+        val totalSaving = getDatabyFlow()
+                .fold(lastSaving, { acc, value->
+                    println("Accumulator: $acc")
+                    println("Value: $value")
+                    println("Current saving: ${acc + value}")
+                    acc + value
+                })
+        println("Total saving: $totalSaving")
+
     }
 }
 
