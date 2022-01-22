@@ -4,6 +4,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.*
@@ -28,7 +29,7 @@ fun operadoresFlow() {
         getDatabyFlow()
                 .map {
                     setFormat(it)
-                    setFormat(converCelsToFahr(it), "F")
+                    setFormat(convertCelsToFahr(it), "F")
                 }
                 //.collect { println(it) }
 
@@ -40,11 +41,19 @@ fun operadoresFlow() {
                 .map {
                     setFormat(it)
                 }
+                //.collect { println(it) }
+
+        newTopic("Transform")
+        getDatabyFlow()
+                .transform {
+                    emit(setFormat(it))
+                    emit(setFormat(convertCelsToFahr(it), "F"))
+                }
                 .collect { println(it) }
     }
 }
 
-fun converCelsToFahr(cels: Float) = ((cels * 9) / 5) + 32
+fun convertCelsToFahr(cels: Float) = ((cels * 9) / 5) + 32
 
 //                                                  Redondeamos la cantidad a 1 solo decimal
 fun setFormat(temp: Float, degree: String = "C") = String.format(Locale.getDefault(), "%.1f $degree", temp)
