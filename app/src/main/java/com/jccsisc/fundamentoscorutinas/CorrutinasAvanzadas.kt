@@ -22,7 +22,40 @@ val countries = listOf("Santander", "CDMX", "Lima", "Buenos Aires", "Apatzingán
 fun main() {
 //    basicChannel()
 //    closeChannel()
-    produceChannel()
+//    produceChannel()
+    pipelines()
+
+}
+
+fun pipelines() {
+    runBlocking {
+        newTopic("Pipelines")
+        val citiesChannels = produceCities()
+        val foodChannels = produceFoods(citiesChannels)
+        foodChannels.consumeEach { println(it) }
+        citiesChannels.cancel()
+        foodChannels.cancel()
+        println("Todo está 10/10")
+    }
+}
+//canal que consumirá el resultado de las cities
+fun CoroutineScope.produceFoods(cities: ReceiveChannel<String>): ReceiveChannel<String> = produce {
+    for (city in cities) {
+        val food = getFoodByCity(city)
+        send("$food desde $city")
+    }
+}
+suspend fun getFoodByCity(city: String): String {
+    delay(300)
+    return when(city) {
+        "Santander"-> "Arepa"
+        "CDMX" -> "Taco"
+        "Lima" -> "Ceviche"
+        "Buenos Aires" -> "Milanesa"
+        "Apatzingán" -> "Morisqueta"
+        "Puerto Vallarta" -> "Arriero"
+        else -> "Sin datos"
+    }
 }
 
 fun produceChannel() {
