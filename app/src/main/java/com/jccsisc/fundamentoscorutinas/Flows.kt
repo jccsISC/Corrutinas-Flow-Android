@@ -32,7 +32,7 @@ fun flowExceptions() {
     runBlocking {
         newTopic("Control de errores")
         newTopic("Try/Catch")
-        try {
+       /* try {
             getMatchResultFlow()
                     .collect {
                         println(it)
@@ -40,7 +40,17 @@ fun flowExceptions() {
                     }
         } catch (e: Exception) {
             e.printStackTrace()
-        }
+        }*/
+
+        newTopic("Transparencia")
+        getMatchResultFlow()
+                .catch {
+                    emit("Error: $this")
+                }
+                .collect {
+                    println(it)
+                    if (!it.contains("-")) println("Notifica al programador...")
+                }
     }
 }
 
@@ -125,6 +135,8 @@ fun getMatchResultFlow() = flow {
         homeTeam += Random.nextInt(0, 21) / 20
         awayTeam += Random.nextInt(0, 21) / 20
         emit("$homeTeam-$awayTeam")
+
+        if (homeTeam == 2 || awayTeam == 2) throw Exception("Habían acordado 1 y 1 :v")
     }
 }
 
