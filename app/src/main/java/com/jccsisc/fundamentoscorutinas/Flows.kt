@@ -2,6 +2,7 @@ package com.jccsisc.fundamentoscorutinas
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -28,6 +29,16 @@ fun operadoresFlow() {
                 .map {
                     setFormat(it)
                     setFormat(converCelsToFahr(it), "F")
+                }
+                //.collect { println(it) }
+
+        newTopic("Filter")
+        getDatabyFlow()
+                .filter {
+                     it < 23
+                }
+                .map {
+                    setFormat(it)
                 }
                 .collect { println(it) }
     }
