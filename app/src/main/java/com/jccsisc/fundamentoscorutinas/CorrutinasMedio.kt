@@ -42,6 +42,13 @@ fun getDatabyFlow(): Flow<Float> = flow {
     }
 }
 
+fun getDatabyFlowStatic(): Flow<Float> = flow {
+    (1..5).forEach {
+        println("Procesando algo...")
+        delay(500)
+        emit(20 + it + Random.nextFloat())
+    }
+}
 
 fun changeWithContext() {
     runBlocking {

@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.*
+import kotlin.system.measureTimeMillis
 
 /****
  * Project: FundamentosCorutinas
@@ -17,7 +18,25 @@ fun main() {
 //    coldFlow()
 //    cancelFlow()
 //    operadoresFlow()
-    terminalFlowOperators()
+//    terminalFlowOperators()
+    bufferFlow()
+}
+
+fun bufferFlow() {
+    runBlocking {
+        newTopic("Buffer para Flow")
+        val time = measureTimeMillis {
+            getDatabyFlowStatic()
+                    .map { setFormat(it) }
+                    .buffer()
+                    .collect {
+                        delay(500)
+                        println(it)
+                    }
+        }
+        println("Time: ${time} ms")
+    }
+
 }
 
 fun terminalFlowOperators() {
