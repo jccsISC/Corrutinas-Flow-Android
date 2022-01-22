@@ -1,7 +1,10 @@
 package com.jccsisc.fundamentoscorutinas
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -18,7 +21,22 @@ val countries = listOf("Santander", "CDMX", "Lima", "Buenos Aires", "Apatzingán
 
 fun main() {
 //    basicChannel()
-    closeChannel()
+//    closeChannel()
+    produceChannel()
+}
+
+fun produceChannel() {
+    runBlocking {
+        newTopic("Canales y el patrón productor.consumidor")
+        val names = produceCities()
+        names.consumeEach { println(it) }
+    }
+}
+
+fun CoroutineScope.produceCities(): ReceiveChannel<String> = produce {
+    countries.forEach {
+        send(it)
+    }
 }
 
 fun closeChannel() {
