@@ -25,14 +25,26 @@ fun terminalFlowOperators() {
         newTopic("Operadores Flow Terminales")
         newTopic("List Operator")
         val list = getDatabyFlow()
-                .toList()
+                //.toList()
         println("List: $list")
 
         newTopic("Single")
         val single = getDatabyFlow()
-                .take(1)
-                .single()
+                //.take(1)
+                //.single()
         println("Single: $single")
+
+        newTopic("Fisrt")
+        val first = getDatabyFlow()
+                //.first()
+        println("First: $first")
+
+        newTopic("Last")
+        val last = getDatabyFlow()
+                //.last()
+        println("Last: $last")
+
+
     }
 }
 
