@@ -16,7 +16,24 @@ import java.util.*
 fun main() {
 //    coldFlow()
 //    cancelFlow()
-    operadoresFlow()
+//    operadoresFlow()
+    terminalFlowOperators()
+}
+
+fun terminalFlowOperators() {
+    runBlocking {
+        newTopic("Operadores Flow Terminales")
+        newTopic("List Operator")
+        val list = getDatabyFlow()
+                .toList()
+        println("List: $list")
+
+        newTopic("Single")
+        val single = getDatabyFlow()
+                .take(1)
+                .single()
+        println("Single: $single")
+    }
 }
 
 fun operadoresFlow() {
@@ -52,7 +69,9 @@ fun operadoresFlow() {
         getDatabyFlow()
                 .take(3)
                 .map { setFormat(it) }
-                .collect { println(it) }
+                //.collect { println(it) }
+
+
     }
 }
 
