@@ -44,6 +44,16 @@ fun terminalFlowOperators() {
                 //.last()
         println("Last: $last")
 
+        newTopic("Reduce")
+        val saving = getDatabyFlow()
+                .reduce { accumulator, value ->
+                    //acumula tod0o el recorrido o algo en especifico
+                    println("Accumulator: $accumulator")
+                    println("Value: $value")
+                    println("Current saving: ${accumulator + value}")
+                    accumulator + value
+                }
+        println("Saving: $saving")
 
     }
 }
