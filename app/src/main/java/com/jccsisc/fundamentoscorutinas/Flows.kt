@@ -1,10 +1,7 @@
 package com.jccsisc.fundamentoscorutinas
 
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.*
@@ -49,6 +46,12 @@ fun operadoresFlow() {
                     emit(setFormat(it))
                     emit(setFormat(convertCelsToFahr(it), "F"))
                 }
+                //.collect { println(it) }
+
+        newTopic("Take")
+        getDatabyFlow()
+                .take(3)
+                .map { setFormat(it) }
                 .collect { println(it) }
     }
 }
