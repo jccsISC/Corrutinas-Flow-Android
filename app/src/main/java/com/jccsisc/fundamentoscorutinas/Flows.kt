@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.*
+import kotlin.random.Random
 import kotlin.system.measureTimeMillis
 
 /****
@@ -19,7 +20,36 @@ fun main() {
 //    cancelFlow()
 //    operadoresFlow()
 //    terminalFlowOperators()
-    bufferFlow()
+//    bufferFlow()
+    conflateFlow()
+}
+
+fun conflateFlow() {
+    runBlocking {
+        newTopic("Funsión")
+        val time = measureTimeMillis {
+            getMatchResultFlow()
+                    .conflate()
+                    .collectLatest {
+                    //.collect {
+                        delay(100)
+                        println(it)
+                    }
+        }
+        println("Time: ${time} ms")
+    }
+}
+
+fun getMatchResultFlow() = flow {
+    var homeTeam = 0
+    var awayTeam = 0
+    (0..45).forEach {
+        println("Minuto: $it")
+        delay(50)
+        homeTeam += Random.nextInt(0, 21) / 20
+        awayTeam += Random.nextInt(0, 21) / 20
+        emit("$homeTeam-$awayTeam")
+    }
 }
 
 fun bufferFlow() {
