@@ -1,13 +1,12 @@
 package com.jccsisc.fundamentoscorutinas
 
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.produce
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import java.lang.Exception
+import java.util.concurrent.TimeoutException
 
 /****
  * Project: FundamentosCorutinas
@@ -23,8 +22,70 @@ fun main() {
 //    basicChannel()
 //    closeChannel()
 //    produceChannel()
-    pipelines()
+//    pipelines()
+//    bufferChannel()
+    exceptionHandler()
+    readLine()
+}
 
+fun exceptionHandler() {
+    //nos regresa el contexto de la corrutina y la excepcion
+    val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+        println("Notifica al programado... $throwable in $coroutineContext")
+    }
+
+    runBlocking {
+        newTopic("Manejo de excepciones")
+        launch {
+            try {
+                delay(100)
+//                throw Exception()
+            }catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        val globalScope = CoroutineScope(Job() + exceptionHandler) //contiene una corrutina personalizada
+        globalScope.launch {
+            delay(200)
+            throw TimeoutException()
+        }
+    }
+}
+
+fun bufferChannel() {
+    runBlocking {
+        newTopic("Buffer para channels")
+        val time = System.currentTimeMillis() //para medir el tiempo de ejecución
+        val channel = Channel<String>()
+        launch {
+            countries.forEach {
+                delay(100)
+                channel.send(it)
+            }
+            channel.close()
+        }
+        launch {
+            delay(1_000)
+            channel.consumeEach { println(it) }
+            println("Time: ${System.currentTimeMillis() - time } ms")
+        }
+
+        val bufferTime = System.currentTimeMillis() //para medir el tiempo de ejecución
+        val bufferChannel = Channel<String>(3)
+        launch {
+            countries.forEach {
+                delay(100)
+                bufferChannel.send(it)
+            }
+            bufferChannel.close()
+        }
+        launch {
+            delay(1_000)
+            bufferChannel.consumeEach { println(it) }
+            println("BTime: ${System.currentTimeMillis() - bufferTime } ms")
+        }
+    }
 }
 
 fun pipelines() {
