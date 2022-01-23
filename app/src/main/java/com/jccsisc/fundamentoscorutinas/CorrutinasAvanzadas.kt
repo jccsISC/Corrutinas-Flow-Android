@@ -5,6 +5,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.produce
+import java.lang.ArithmeticException
 import java.lang.Exception
 import java.util.concurrent.TimeoutException
 
@@ -32,6 +33,10 @@ fun exceptionHandler() {
     //nos regresa el contexto de la corrutina y la excepcion
     val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
         println("Notifica al programado... $throwable in $coroutineContext")
+
+        if (throwable is ArithmeticException) println("Mostrar mensaje de reintentar...")
+        println()
+
     }
 
     runBlocking {
@@ -50,6 +55,26 @@ fun exceptionHandler() {
             delay(200)
             throw TimeoutException()
         }
+
+        CoroutineScope(Job() + exceptionHandler).launch {
+            val result = async {
+                delay(500)
+                multiLambda(2, 5) {
+                    if (it > 9) throw ArithmeticException()
+                }
+            }
+            println("Result: ${result.await()}")
+        }
+
+        val channel = Channel<String>()
+        CoroutineScope(Job()).launch(exceptionHandler) {
+            delay(800)
+            countries.forEach {
+                channel.send(it)
+                if (it == "Lima") channel.close()
+            }
+        }
+        channel.consumeEach { println(it) }
     }
 }
 
